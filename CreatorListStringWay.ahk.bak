@@ -1,0 +1,95 @@
+﻿; AHK v1.1 script (Создано почти полностью ИИ)
+
+File := "Data\edit_way.txt"
+File2 := "Data\ListStringWay.ahk"
+
+; --- Подготовка данных (читаем файл) ---
+Sleep, 50 ; Используем синтаксис команд v1
+FileRead, MyWay, % File
+if ErrorLevel {
+    MsgBox, Не удалось прочитать файл %File%. Пробуем создать пустышку
+
+    ; --- Конфигурация ---
+    NewFolderName := "Data"
+    FileNameToCreate := "edit_way.txt"
+
+
+; --- 1. Определяем путь к новой папке и новому файлу ---
+    TargetFolderPath := A_ScriptDir "\" NewFolderName
+    TargetFilePath   := TargetFolderPath "\" FileNameToCreate
+
+
+; --- 2. Определяем содержимое файла (Heredoc синтаксис) ---
+    ; Символ `` `n `` обозначает новую строку
+    FileContent :=
+
+
+    ; --- 3. Создаем целевую папку ---
+    FileCreateDir, %TargetFolderPath%
+
+    if ErrorLevel {
+        MsgBox, Ошибка при создании папки: %TargetFolderPath%
+        return
+    }
+
+
+; --- 4. Создаем файл и записываем в него содержимое ---
+    ; FileAppend создает файл, если его не существует, или добавляет текст в конец существующего.
+    FileAppend, %FileContent%, %TargetFilePath%
+
+
+; --- 5. Проверка результата ---
+    if ErrorLevel {
+        MsgBox, Ошибка при создании файла "%FileNameToCreate%" в папке: %TargetFolderPath%
+    } else {
+        MsgBox, Готово! Папка "%NewFolderName%" создана, и файл "%FileNameToCreate%" создан внутри нее с нужным содержимым.
+        ; Можете открыть файл для проверки
+        Run, %TargetFilePath%
+    }
+    FileRead, MyWay, % File
+    if ErrorLevel {
+        MsgBox, Не удалось прочитать файл %File%.
+    }
+    else {
+        MsgBox, Файл-пустышка %File% был создан.
+    }
+    return
+}
+
+; --- Основная логика обработки ---
+
+; Разделяем текст на отдельные строки
+LineArray := StrSplit(MyWay, "`n", "`r")
+global waylistOS := []
+; Создаем основной массив AHK для хранения групп (используем объекты)
+Groups := ; Инициализация объекта (массива)
+
+ii := 1
+for index, line in LineArray
+{
+    ; Проверяем, является ли текущая строка разделителем "-"
+    if (line == "-")
+    {
+        ; Добавляем завершенную группу в основной массив
+        ; Проверяем длину через Groups.Length()
+        if (Groups.Length() > 0) {
+            waylistOS.Push(Groups)
+            ; Начинаем новую пустую группу для следующих элементов
+            Groups := []
+        }
+    }
+    else
+    {
+        ; Если это не разделитель, добавляем строку в текущую группу
+        Groups.Push(line)
+    }
+}
+ii =
+
+; Добавляем последнюю собранную группу в основной массив после завершения цикла
+if (Groups.Length() > 0) {
+    waylistOS.Push(Groups)
+}
+
+; Сообщение для пользователя
+MsgBox, Текст из "%File%" успешно отформатирован в массив!

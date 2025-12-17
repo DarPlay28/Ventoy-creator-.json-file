@@ -1,0 +1,44 @@
+﻿checkSelList := false
+
+for index, element in listOS {
+	if element[4]
+	{
+		checkSelList = true
+	}
+}
+
+if checkSelList {
+if listOS[] {
+for index, element in prefixParametr {
+	if index > 1
+	{
+		strOS .= ","
+	}
+	Else if !StartInc {
+		strOS .= ","
+	}
+	strOS .= "`n""menu_class" element """:["
+	for index, element in listOS {
+		if SubStr(element[1], 0) = "/" {
+			if index > 1
+			{
+				if pcheck = true
+				{
+					pcheck := false
+				}
+				else
+				{
+					strOS .= ","
+				}
+			}
+			strOS .= "`n    {"
+			strOS .= "`n        ""parent"": ""/" SubStr(element[1], 1, StrLen(element[1]) - 1) ""","
+			strOS .= "`n        ""class"": """ prefixTV[element[4]] """"
+			strOS .= "`n    }"
+		}
+	}
+	strOS .= "`n]"
+	StartInc := false
+}
+}
+}

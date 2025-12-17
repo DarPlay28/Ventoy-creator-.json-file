@@ -1,0 +1,15 @@
+﻿strDOS =
+strDOS .= "`n    { ""VTOY_MENU_LANGUAGE"": ""ru_RU"" }"
+strDOS .= "`n]"
+
+for index, element in prefixParametr {
+	if index > 2
+	{
+		strOS .= ","
+	}
+	Else if !StartInc {
+		strOS .= ","
+	}
+	strOS .= "`n""control" element """:[" strDOS
+	StartInc := false
+}
