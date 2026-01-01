@@ -1,61 +1,89 @@
 ﻿File := "Data\edit_theme.txt"
 File2 := "Data\ListStringTheme.ahk"
 
-MyTheme := "f"
-
 FileRead, MyTheme, % File
 if ErrorLevel {
-    MsgBox, Не удалось прочитать файл %File%.
+    MsgBox, Не удалось прочитать файл %File%. Пробуем создать пустышку
+
+    ; --- Конфигурация ---
+    NewFolderName := "Data"
+    FileNameToCreate := "edit_theme.txt"
+
+
+; --- 1. Определяем путь к новой папке и новому файлу ---
+    TargetFolderPath := A_ScriptDir "\" NewFolderName
+    TargetFilePath   := TargetFolderPath "\" FileNameToCreate
+
+
+; --- 2. Определяем содержимое файла (Heredoc синтаксис) ---
+    ; Символ "`n" обозначает новую строку
+    FileContent :=
+
+
+    ; --- 3. Создаем целевую папку ---
+    FileCreateDir, %TargetFolderPath%
+
+    if ErrorLevel {
+        MsgBox, Ошибка при создании папки: %TargetFolderPath%
+        return
+    }
+
+
+; --- 4. Создаем файл и записываем в него содержимое ---
+    ; FileAppend создает файл, если его не существует, или добавляет текст в конец существующего.
+    FileAppend, %FileContent%, %TargetFilePath%
+
+
+; --- 5. Проверка результата ---
+    if ErrorLevel {
+        MsgBox, Ошибка при создании файла "%FileNameToCreate%" в папке: %TargetFolderPath%
+    } else {
+        MsgBox, Готово! Папка "%NewFolderName%" создана, и файл "%FileNameToCreate%" создан внутри нее с нужным содержимым.
+        ; Можете открыть файл для проверки
+        Run, %TargetFilePath%
+    }
+    FileRead, MyTheme, % File
+    if ErrorLevel {
+        MsgBox, Не удалось прочитать файл %File%.
+    }
+    else {
+        MsgBox, Файл-пустышка %File% был создан.
+    }
     return
 }
 
-LineArray := StrSplit(MyTheme, "`n", "`r")
+; --- Основная логика обработки ---
 
-Groups := [] ; Инициализация объекта (массива)
-CurrentGroup := []
+; Разделяем текст на отдельные строки
+LineArray := StrSplit(MyTheme, "`n", "`r")
+global listTheme = []
+; Создаем основной массив AHK для хранения групп (используем объекты)
+Group = []; Инициализация объекта (массива)
 
 for index, line in LineArray
 {
+    ; Проверяем, является ли текущая строка разделителем "*"
     if (line == "*")
     {
-        if (CurrentGroup.Length() > 0) {
-            Groups.Push(CurrentGroup)
-
-            CurrentGroup := []
+        ; Добавляем завершенную группу в основной массив
+        ; Проверяем длину через Group.Length()
+        if (Group.Length() > 0) {
+            listTheme.Push(Group)
+            ; Начинаем новую пустую группу для следующих элементов
+            Group := []
         }
     }
     else
     {
-        CurrentGroup.Push(line)
+        ; Если это не разделитель, добавляем строку в текущую группу
+        Group.Push(line)
     }
 }
 
-if (CurrentGroup.Length() > 0) {
-    Groups.Push(CurrentGroup)
+; Добавляем последнюю собранную группу в основной массив после завершения цикла
+if (Group.Length() > 0) {
+    listTheme.Push(Group)
 }
 
-MyThemeFormatted := "global listTheme := ["
-
-for i, group in Groups
-{
-    MyThemeFormatted .= "[" ; Открываем внутренний массив
-
-    for j, item in group
-    {
-        MyThemeFormatted .= """" item """"
-        if (j < group.Length()) {
-            MyThemeFormatted .= ", "
-        }
-    }
-
-    MyThemeFormatted .= "]" ; Закрываем внутренний массив
-
-    if (i < Groups.Length()) {
-        MyThemeFormatted .= ", "
-    }
-}
-
-MyThemeFormatted .= "]" ; Закрываем внешний массив
-
-FileDelete, % File2
-FileAppend, % MyThemeFormatted, % File2, UTF-8
+; Сообщение для пользователя
+MsgBox, Текст из "%File%" успешно отформатирован в массив!

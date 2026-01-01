@@ -23,16 +23,17 @@ global prefixTV := waylistOS[2] ; prefixThemeVentoy
 #Include %A_ScriptDir%\CreatorListStringOS.ahk
 #Include %A_ScriptDir%\Data\ListStringOS.ahk
 #Include %A_ScriptDir%\CreatorListStringTheme.ahk
-#Include %A_ScriptDir%\Data\ListStringTheme.ahk
+;#Include %A_ScriptDir%\Data\ListStringTheme.ahk
+
+File := dlf . ":\ventoy\ventoy.json"
 FileAppend,, % File
 
-listTheme[2][1] :=
 StartInc = true
 strOS :=
 
-#Include %A_ScriptDir%\Lib\DropDownList_to_load.ahk
+#Include %A_ScriptDir%\lib\DropDownList_to_load.ahk
 
-ListThem := DropDLToLoad(ListTheme[1], prefixTV[1])
+ListThem = DropDLToLoad(% listTheme[1], listTheme[2][1])
 
 Gui +hwndhGui
 
@@ -41,7 +42,7 @@ Gui, font, s8,, Verdana
 Gui, Margin, 10, 5
 Gui Add, Text, x5 h23, Номер файла по умолчанию: ;Text
 Gui, Margin,, -25
-Gui Add, Edit, x160 w170 h23 vdfile, %dnf%, % waylistOS[2][1] ;Edit
+Gui Add, Edit, x160 w170 h23 vdfile, %dnf% ;Edit  % waylistOS[2][1]
 Gui, Margin, 10, 5
 Gui Add, Text, x5 h23, Буква диска флешки: ;Text
 Gui, Margin,, -25
@@ -49,7 +50,7 @@ Gui Add, Edit, x160 w170 h23 vdlf, %dname% ;Edit ; Disk (Dir) Lettel (Буква
 Gui, Margin,, 5
 Gui Add, Text, x5 h23, Тема по умолчанию: ;Text
 Gui, Margin,, -25
-Gui, Add, DropDownList, x160 w170 vdtheme, %listThem% ;Edit
+Gui, Add, DropDownList, x160 w170 vdtheme, %ListThem% ;Edit
 /*
 Gui, Margin,, 5
 Gui Add, Text, x5 h23, Город: ;Text
