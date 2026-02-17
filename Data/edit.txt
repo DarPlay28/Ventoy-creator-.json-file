@@ -1,6 +1,6 @@
 ﻿Win11_25H2_Russian_x64.iso
 Windows 11 x64 (64 bit)
-1
+
 1
 Windows64.iso
 Windows 10 with 22H2 x64 (64 bit)
