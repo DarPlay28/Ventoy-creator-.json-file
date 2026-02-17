@@ -1,5 +1,4 @@
 ﻿File := "Data\edit_way.txt"
-File2 := "Data\ListStringWay.ahk"
 
 FileRead, MyWay, % File
 if ErrorLevel {
@@ -27,8 +26,6 @@ if ErrorLevel {
         MsgBox, Ошибка при создании папки: %TargetFolderPath%
         return
     }
-
-
 ; --- 4. Создаем файл и записываем в него содержимое ---
     ; FileAppend создает файл, если его не существует, или добавляет текст в конец существующего.
     FileAppend, %FileContent%, %TargetFilePath%
@@ -56,9 +53,9 @@ if ErrorLevel {
 
 ; Разделяем текст на отдельные строки
 LineArray := StrSplit(MyWay, "`n", "`r")
-global waylistOS = []
+global waylistOS := []
 ; Создаем основной массив AHK для хранения групп (используем объекты)
-Groups := ; Инициализация объекта (массива)
+Groups := [] ; Инициализация объекта (массива)
 
 for index, line in LineArray
 {

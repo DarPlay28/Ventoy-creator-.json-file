@@ -1,5 +1,4 @@
-DropDLToLoad(Target, TargetA)
-{
+DropDLToLoad(Target, TargetA) {
     TargetCount := Target.Length() ; Общее количество званий
 	DoneList = ""
 	for index, element in Target {

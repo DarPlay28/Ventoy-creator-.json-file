@@ -33,7 +33,7 @@ strOS :=
 
 #Include %A_ScriptDir%\lib\DropDownList_to_load.ahk
 
-ListThem = DropDLToLoad(% listTheme[1], listTheme[2][1])
+ListThem := DropDLToLoad(listTheme[1], listTheme[2][1])
 
 Gui +hwndhGui
 

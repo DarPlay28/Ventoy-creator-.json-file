@@ -56,7 +56,7 @@ if ErrorLevel {
 
 ; Разделяем текст на отдельные строки
 LineArray := StrSplit(MyTheme, "`n", "`r")
-global listTheme = []
+global listTheme := []
 ; Создаем основной массив AHK для хранения групп (используем объекты)
 Group = []; Инициализация объекта (массива)
 
