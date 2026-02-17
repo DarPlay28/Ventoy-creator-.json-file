@@ -1,72 +1,42 @@
 ﻿File := "Data\edit.txt"
+File2 := "Data\ListStringOS.ahk"
 
 global MyText .= ""
 
-FileRead, MyText, % File
+FileRead, MyText, % File ; Не забывай поставить переменную, например: MyText
 if ErrorLevel {
-    MsgBox, Не удалось прочитать файл %File%. Пробуем создать пустышку
-
-    ; --- Конфигурация ---
-    NewFolderName := "Data"
-    FileNameToCreate := "edit_way.txt"
-
-    TargetFolderPath := A_ScriptDir "\" NewFolderName ; 1. Определяем путь к новой папке и новому файлу
-    TargetFilePath   := TargetFolderPath "\" FileNameToCreate
-    FileContent := ; 2. Определяем содержимое файла (Heredoc синтаксис). Символ `` `n `` обозначает новую строку
-    FileCreateDir, %TargetFolderPath% ; 3. Создаем целевую папку
-    if ErrorLevel {
-        MsgBox, Ошибка при создании папки: %TargetFolderPath%
-        return
-    }
-    FileAppend, %FileContent%, %TargetFilePath% ; 4. Создаем файл и записываем в него содержимое. FileAppend создает файл, если его не существует, или добавляет текст в конец существующего.
-    if ErrorLevel { ; 5. Проверка результата
-        MsgBox, Ошибка при создании файла "%FileNameToCreate%" в папке: %TargetFolderPath%
-    } else {
-        MsgBox, Готово! Папка "%NewFolderName%" создана, и файл "%FileNameToCreate%" создан внутри нее с нужным содержимым.
-        Run, %TargetFilePath% ; Можете открыть файл для проверки
-    }
-    FileRead, MyWay, % File
-    if ErrorLevel {
-        MsgBox, Не удалось прочитать файл %File%.
-    }
-    else {
-        MsgBox, Файл-пустышка %File% был создан.
-    }
+    MsgBox, Не удалось прочитать файл %File%.
+    FileAppend,, % File
     return
 }
 
 ; StrReplace(строка_источник, искомый_текст, текст_на_замену)
-; --- Основная логика обработки ---
-
-; Разделяем текст на отдельные строки
-LineArray := StrSplit(MyWay, "`n", "`r")
-global listOS := []
-; Создаем основной массив AHK для хранения групп (используем объекты)
-Groups := [] ; Инициализация объекта (массива)
+LineArray := StrSplit(MyText, "`n", "`r")
+MyText := "listOS := ([[" ; Начало внешнего и первого внутреннего массива
 
 for index, line in LineArray
 {
-    ; Проверяем, является ли текущая строка разделителем "*"
-    if (line == "*")
-    {
-        ; Добавляем завершенную группу в основной массив
-        ; Проверяем длину через Groups.Length()
-        if (Groups.Length() > 0) {
-            listOS.Push(Groups)
-            ; Начинаем новую пустую группу для следующих элементов
-            Groups := []
+    ; Логика добавления разделителей ПЕРЕД текущим элементом
+
+    ; Если это НЕ первый элемент в списке (index > 1):
+    if (index > 1) {
+        ; Проверяем, является ли текущий индекс кратным 4
+        ; (т.е., это 5-й, 9-й, 13-й элемент и т.д. — начало нового блока)
+        if (Mod(index - 1, 4) == 0) {
+            ; Если да, закрываем предыдущий внутренний массив и открываем новый
+            MyText .= "]`n  , ["
+        } else {
+            ; Иначе просто ставим разделитель между элементами внутри текущего массива
+            MyText .= ", "
         }
     }
-    else
-    {
-        ; Если это не разделитель, добавляем строку в текущую группу
-        Groups.Push(line)
-    }
-}
 
-; Добавляем последнюю собранную группу в основной массив после завершения цикла
-if (Groups.Length() > 0) {
-    listOS.Push(Groups)
+    ; Добавляем сам элемент в кавычках
+    MyText .= """" line """"
 }
-
-MsgBox, Текст из "%File%" успешно отформатирован в массив!
+; 2. Закрываем итоговый текст
+MyText .= "]])"
+FileDelete, % File2
+FileAppend, % MyText, % File2, UTF-8
+; Сообщение для пользователя
+; MsgBox, Текст из "%File%" успешно отформатирован в массив AHK!

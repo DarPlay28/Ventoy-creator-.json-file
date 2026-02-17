@@ -1,0 +1,1 @@
+﻿global waylistOS := [["/Windows 11 with Microsoft Russian/", "/Windows 10 with Microsoft Russian/", "/Windows 8.1 with Microsoft Russian/", "/Windows 7 with SP1 U Russian/", "/Windows Vista with SP2 U Russian/", "/Windows XP with/"], ["windows11", "windows", "windows8", "windows7"]]
